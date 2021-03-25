@@ -47,8 +47,21 @@ class MainActivity : AppCompatActivity() {
         flexboxLayout!!.justifyContent = JustifyContent.CENTER
         flexboxLayout!!.alignItems = AlignItems.CENTER
         recyclerView!!.layoutManager = flexboxLayout
+        loadingText = findViewById(R.id.loading)
 
 
+
+
+        volleySingleton = VolleySingleton(this)
+        requestQueue = volleySingleton!!.requestQueue
+
+        searchButton = findViewById(R.id.search_button)
+        searchButton!!.setOnClickListener {
+            imageAdapter!!.clearImages()
+            currentSearchKey = searchInput!!.text.toString()
+            getImages()
+        }
+        getImages()
         recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
@@ -59,18 +72,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
-        volleySingleton = VolleySingleton(this)
-        requestQueue = volleySingleton!!.requestQueue
-        loadingText = findViewById(R.id.loading)
-        searchButton = findViewById(R.id.search_button)
-        searchButton!!.setOnClickListener {
-            imageAdapter!!.clearImages()
-            currentSearchKey = searchInput!!.text.toString()
-            getImages()
-        }
         searchInput!!.setText(currentSearchKey)
-        getImages()
+
     }
 
     /**
@@ -81,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         loadingText!!.visibility = VISIBLE
         var url = "https://api.imgur.com/3/gallery/"
         url += if(currentSearchKey.isNotEmpty()) {
-            "search/viral/all/${currentPage}?q=${currentSearchKey}"
+            "search/time/all/${currentPage}?q=${currentSearchKey}"
         } else { //searches for the day's viral images if there's no search key
             "hot/viral/day/${currentPage}}"
         }
