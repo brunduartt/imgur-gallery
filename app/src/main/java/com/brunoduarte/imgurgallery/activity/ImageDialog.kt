@@ -12,10 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.brunoduarte.imgurgallery.R
 import com.brunoduarte.imgurgallery.adapter.ImagesAdapter
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.flexbox.JustifyContent
+import com.google.android.flexbox.*
 
 class ImageDialog(imagesAdapter: ImagesAdapter) : DialogFragment() {
     private val imagesAdapter:ImagesAdapter = imagesAdapter
@@ -33,8 +30,10 @@ class ImageDialog(imagesAdapter: ImagesAdapter) : DialogFragment() {
         spacer1.setOnClickListener(onClickListener)
         recyclerView.adapter = imagesAdapter
         val flexboxLayout = FlexboxLayoutManager(context)
-        flexboxLayout.flexDirection = FlexDirection.ROW
-        flexboxLayout.justifyContent = JustifyContent.CENTER
+        flexboxLayout.flexDirection = FlexDirection.COLUMN
+        flexboxLayout.flexWrap = FlexWrap.NOWRAP
+        flexboxLayout.justifyContent = JustifyContent.FLEX_START
+        flexboxLayout.alignItems = AlignItems.CENTER
         recyclerView.layoutManager = flexboxLayout
         recyclerView.setHasFixedSize(true)
         return rootView
