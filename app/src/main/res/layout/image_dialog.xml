@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black55"
+    android:background="@color/black75"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp"
@@ -15,10 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </FrameLayout>
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/dialog_recycler_view"
@@ -27,7 +24,6 @@
             android:layout_height="wrap_content">
 
         </androidx.recyclerview.widget.RecyclerView>
-    </com.google.android.material.card.MaterialCardView>
     <FrameLayout
         android:id="@+id/spacer_1"
         android:layout_weight="1"

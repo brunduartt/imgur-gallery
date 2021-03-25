@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         flexboxLayout!!.flexWrap = FlexWrap.WRAP
         flexboxLayout!!.flexDirection = FlexDirection.COLUMN
         flexboxLayout!!.justifyContent = JustifyContent.CENTER
+        flexboxLayout!!.alignItems = AlignItems.CENTER
         recyclerView!!.layoutManager = flexboxLayout
 
 

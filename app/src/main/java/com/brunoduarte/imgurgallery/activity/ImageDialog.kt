@@ -33,7 +33,7 @@ class ImageDialog(imagesAdapter: ImagesAdapter) : DialogFragment() {
         flexboxLayout.flexDirection = FlexDirection.COLUMN
         flexboxLayout.flexWrap = FlexWrap.NOWRAP
         flexboxLayout.justifyContent = JustifyContent.FLEX_START
-        flexboxLayout.alignItems = AlignItems.STRETCH
+        flexboxLayout.alignItems = AlignItems.CENTER
         recyclerView.layoutManager = flexboxLayout
         //recyclerView.setHasFixedSize(true)
         return rootView
