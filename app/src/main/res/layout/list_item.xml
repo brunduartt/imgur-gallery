@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:padding="8dp"
+    android:gravity="center"
     android:id="@+id/image_wrapper"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     >
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent">
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/loading_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/colorPrimary"
+            android:layout_gravity="center" />
         <ImageView
             android:layout_margin="5dp"
             android:id="@+id/image"

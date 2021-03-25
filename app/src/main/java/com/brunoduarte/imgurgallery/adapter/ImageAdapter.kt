@@ -3,9 +3,12 @@ package com.brunoduarte.imgurgallery.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +16,7 @@ import com.brunoduarte.imgurgallery.R
 import com.brunoduarte.imgurgallery.activity.ImageDialog
 import com.brunoduarte.imgurgallery.domain.ImageResponse
 import com.brunoduarte.imgurgallery.utils.Utils
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 class ImagesAdapter(
@@ -50,19 +54,24 @@ class ImagesAdapter(
         if(image.isAlbum) {
             mainImage = image.images!![0]
         }
-        val p = Picasso.with(context).load(mainImage.url).placeholder(R.drawable.circular_progress)
+        val p = Picasso.with(context).load(mainImage.url)
 
         if(setFixedWidth) {
             var heightDp = Utils.convertPixelsToDp(mainImage.height!!.toFloat(), context)
             val widthDp = Utils.convertPixelsToDp(mainImage.width!!.toFloat(), context)
             heightDp = (heightDp * minImagesWidthDp/widthDp)
             // loads image to the proportional size, maintaining it's ratio
-            p.resize(
-                minImagesWidthDp,
-                heightDp.toInt()
-            )
+            p.resize(minImagesWidthDp, heightDp.toInt())
         }
-        p.into(holder.imageView)
+        holder.loading.visibility = VISIBLE
+        p.into(holder.imageView, object : Callback {
+            override fun onSuccess() {
+                holder.loading.visibility = GONE
+            }
+            override fun onError() {
+                holder.loading.visibility = GONE
+            }
+        })
         if(enableOnClick) { // Opens dialog with all the images
             holder.imageView.setOnClickListener {
                 val imageAdapter = ImagesAdapter(context, fragmentManager, minImagesWidthDp)
@@ -113,6 +122,7 @@ class ImagesAdapter(
     class ViewHolder(view: View, imageViewId: Int, imageViewWrapperId: Int) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView = view.findViewById(imageViewId)
         val imageWrapper: LinearLayout = view.findViewById(imageViewWrapperId)
+        val loading: ProgressBar = view.findViewById(R.id.loading_spinner)
     }
 
 }
