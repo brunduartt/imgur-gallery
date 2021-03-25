@@ -11,9 +11,11 @@ class ImageResponse {
     var isAlbum: Boolean = false
     var images: ArrayList<ImageResponse>? = null
 
-
+    /**
+     *  Parses the image json to the propperties of the object
+     */
     fun parseImg(image: JSONObject): ImageResponse? {
-        if (image.getString("type").contains("image")) {
+        if (image.getString("type").contains("image")) { // only valid if it's an image
             title = image.getString("title")
             id = image.getString("id")
             url = image.getString("link")
@@ -24,6 +26,9 @@ class ImageResponse {
         return null
     }
 
+    /**
+     * Parses the entire response json. If it's an album, parses each image included in it
+     */
     fun parseFromJson(json: JSONObject):Boolean {
         if(json.getBoolean("is_album")) {
             images = ArrayList()

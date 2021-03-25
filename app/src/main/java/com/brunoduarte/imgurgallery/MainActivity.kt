@@ -47,9 +47,11 @@ class MainActivity : AppCompatActivity() {
         flexboxLayout!!.justifyContent = JustifyContent.CENTER
         recyclerView!!.layoutManager = flexboxLayout
 
+
         recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
+                // checks if user is reached the end of the page and retrieves the next one
                 if(!loading && flexboxLayout!!.findLastCompletelyVisibleItemPosition() == imageAdapter!!.images.size-1){
                     currentPage += 1
                     getImages()
@@ -69,13 +71,17 @@ class MainActivity : AppCompatActivity() {
         searchInput!!.setText(currentSearchKey)
         getImages()
     }
+
+    /**
+     * Retrieves and adds to the screen all the images of the actual page
+     */
     fun getImages() {
         loading = true
         loadingText!!.visibility = VISIBLE
         var url = "https://api.imgur.com/3/gallery/"
         url += if(currentSearchKey.isNotEmpty()) {
             "search/viral/all/${currentPage}?q=${currentSearchKey}"
-        } else {
+        } else { //searches for the day's viral images if there's no search key
             "hot/viral/day/${currentPage}}"
         }
         val jsonObjectRequest = object : JsonObjectRequest(

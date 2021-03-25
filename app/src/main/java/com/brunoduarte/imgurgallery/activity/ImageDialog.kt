@@ -40,7 +40,4 @@ class ImageDialog(imagesAdapter: ImagesAdapter) : DialogFragment() {
         return rootView
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState)
-    }
 }

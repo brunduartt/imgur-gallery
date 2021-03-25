@@ -51,10 +51,12 @@ class ImagesAdapter(
             mainImage = image.images!![0]
         }
         val p = Picasso.with(context).load(mainImage.url).placeholder(R.drawable.circular_progress)
+
         if(setFixedWidth) {
             var heightDp = Utils.convertPixelsToDp(mainImage.height!!.toFloat(), context)
             val widthDp = Utils.convertPixelsToDp(mainImage.width!!.toFloat(), context)
             heightDp = (heightDp * minImagesWidthDp/widthDp)
+            // loads image to the proportional size, maintaining it's ratio
             p.resize(
                 minImagesWidthDp,
                 heightDp.toInt()
@@ -67,7 +69,7 @@ class ImagesAdapter(
                 imageAdapter.setFixedWidth = false
                 imageAdapter.enableOnClick = false
                 val dialogImagesList = ArrayList<ImageResponse>()
-                if (image.isAlbum) {
+                if (image.isAlbum) { // if it's an album, adds all of it's image to the dialog's images list
                     dialogImagesList.addAll(image.images!!)
                 } else {
                     dialogImagesList.add(image)
@@ -90,11 +92,17 @@ class ImagesAdapter(
         notifyItemInserted(images.size - 1)
     }
 
+    /**
+     * Adds all images of the array into the adapter's array
+     */
     fun addImages(newImages: ArrayList<ImageResponse>) {
         images.addAll(newImages)
         notifyItemRangeInserted(images.size - newImages.size, newImages.size)
     }
 
+    /**
+     * Clear all images of list
+     */
     fun clearImages() {
         val size = images.size
         images.clear()
