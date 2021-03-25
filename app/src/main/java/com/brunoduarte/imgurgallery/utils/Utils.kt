@@ -12,5 +12,8 @@ class Utils {
             return px / (context.resources
                 .displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
         }
+        fun convertDpToPixels(dp: Float, context: Context): Float {
+            return dp * context.resources.displayMetrics.density;
+        }
     }
 }

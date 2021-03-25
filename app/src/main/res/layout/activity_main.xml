@@ -7,23 +7,56 @@
     android:background="@color/gray"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/search_input_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+    <LinearLayout
+        android:background="@color/colorSecondary"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:hint="Pesquisar" >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/search_input"
+        android:layout_height="60dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_marginHorizontal="10dp"
+            android:src="@drawable/imgur_logo"
+            android:layout_height="match_parent">
+
+        </ImageView>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/search_input_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:hint="Pesquisar" >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/search_input"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-            android:background="@color/transparent"
-            android:maxLength="20">
+                android:background="@color/transparent"
+                android:maxLength="20">
 
-        </com.google.android.material.textfield.TextInputEditText>
-    </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="60dp"
+            android:id="@+id/search_button"
+            app:icon="@drawable/ic_search_black_24dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_height="match_parent">
+
+        </com.google.android.material.button.MaterialButton>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:text="Carregando..."
+        android:background="@color/white"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_height="30dp">
+
+    </TextView>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

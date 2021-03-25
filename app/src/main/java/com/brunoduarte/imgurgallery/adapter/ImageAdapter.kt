@@ -5,53 +5,106 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.brunoduarte.imgurgallery.R
-import com.brunoduarte.imgurgallery.domain.Image
-import com.brunoduarte.imgurgallery.services.VolleySingleton
+import com.brunoduarte.imgurgallery.activity.ImageDialog
+import com.brunoduarte.imgurgallery.domain.ImageResponse
 import com.brunoduarte.imgurgallery.utils.Utils
 import com.squareup.picasso.Picasso
-import kotlin.math.round
 
-class ImagesAdapter(context: Context) : RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
-    private val context: Context = context
-    val images: ArrayList<Image> = ArrayList()
-    private val volleySingleton = VolleySingleton.getInstance(context)
+class ImagesAdapter(
+    private val context: Context,
+    private val fragmentManager: FragmentManager,
+    private val minImagesWidthDp: Int
+    ) : RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
+
+    val images: ArrayList<ImageResponse> = ArrayList()
+    private var layoutId = R.layout.list_item
+    private var imageViewId = R.id.image
+    private var imageWrapperId = R.id.image_wrapper
+
+    var enableOnClick = true
+    var setFixedWidth = true
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.list_item, parent, false)
-        return ViewHolder(view)
+            .inflate(layoutId, parent, false)
+        return ViewHolder(view, imageViewId, imageWrapperId)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.imageView.setVisibility(View.VISIBLE);
-        val columnWidthDp = 120F;
-        var heightDp = Utils.convertPixelsToDp(images[position].height!!.toFloat(), context)
-        val widthDp = Utils.convertPixelsToDp(images[position].width!!.toFloat(), context)
-        heightDp = (heightDp * columnWidthDp/widthDp)
-        Picasso.with(context).load(images[position].mainImageUrl).placeholder(R.drawable.circular_progress).resize(120, heightDp.toInt()).into(holder.imageView)
+        holder.imageView.visibility = View.VISIBLE;
+        if(setFixedWidth) {
+            var params = holder.imageWrapper.layoutParams
+            params.width = minImagesWidthDp
+            holder.imageWrapper.layoutParams = params
+        } else {
+            holder.imageWrapper.minimumWidth = minImagesWidthDp
+        }
+        var image = images[position]
+        var mainImage = image
+        if(image.isAlbum) {
+            mainImage = image.images!![0]
+        }
+        val p = Picasso.with(context).load(mainImage.url).placeholder(R.drawable.circular_progress)
+        if(setFixedWidth) {
+            var heightDp = Utils.convertPixelsToDp(mainImage.height!!.toFloat(), context)
+            val widthDp = Utils.convertPixelsToDp(mainImage.width!!.toFloat(), context)
+            heightDp = (heightDp * minImagesWidthDp/widthDp)
+            p.resize(
+                minImagesWidthDp,
+                heightDp.toInt()
+            )
+        }
+        p.into(holder.imageView)
+        if(enableOnClick) { // Opens dialog with all the images
+            holder.imageView.setOnClickListener {
+                val imageAdapter = ImagesAdapter(context, fragmentManager, minImagesWidthDp)
+                imageAdapter.setFixedWidth = false
+                imageAdapter.enableOnClick = false
+                val dialogImagesList = ArrayList<ImageResponse>()
+                if (image.isAlbum) {
+                    dialogImagesList.addAll(image.images!!)
+                } else {
+                    dialogImagesList.add(image)
+                }
+                imageAdapter.addImages(dialogImagesList)
+                val imageDialog = ImageDialog(imageAdapter)
+                val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                transaction.add(android.R.id.content, imageDialog).addToBackStack(null).commit()
+            }
+        }
     }
 
     override fun getItemCount(): Int {
         return images.size
     }
 
-    fun addImage(image: Image) {
+    fun addImage(image: ImageResponse) {
         images.add(image)
         notifyItemInserted(images.size - 1)
     }
 
-    fun addImages(newImages: ArrayList<Image>) {
+    fun addImages(newImages: ArrayList<ImageResponse>) {
         images.addAll(newImages)
         notifyItemRangeInserted(images.size - newImages.size, newImages.size)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView: ImageView
-        init {
-            imageView = view.findViewById(R.id.image)
-        }
+    fun clearImages() {
+        val size = images.size
+        images.clear()
+        notifyItemRangeRemoved(0, size)
+    }
+
+
+    class ViewHolder(view: View, imageViewId: Int, imageViewWrapperId: Int) : RecyclerView.ViewHolder(view) {
+        val imageView: ImageView = view.findViewById(imageViewId)
+        val imageWrapper: LinearLayout = view.findViewById(imageViewWrapperId)
     }
 
 }
